@@ -1,0 +1,51 @@
+<h2>Clients</h2>
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="large" color="#fff" type="ball-spin-clockwise-fade-rotating" [fullScreen]="true"><p style="color: white"> Loading... </p></ngx-spinner>
+<form [formGroup]="clientForm" (ngSubmit)="onSubmit(clientForm)">
+  <div class="form-group">
+    <label for="name" class="form-label">Client Name: </label>
+    <input type="text" formControlName="Name" class="form-control" required>
+    <div *ngIf="getControl.Name.touched && getControl.Name.invalid" class="danger">
+      <div *ngIf="getControl.Name.errors" class="text-danger">Please input a valid client name</div>
+    </div>
+  </div>
+  <br />
+  <div class="from-group">
+    <button type="submit" class="btn btn-primary" [disabled]="!clientForm.valid">Submit</button>
+  </div>
+</form>
+<br />
+<table class="table">
+  <thead class="thead-dark">
+    <tr class="text-center">
+      <th scope="col">#</th>
+      <th scope="col">Client Id</th>
+      <th scope="col">Client Name</th>
+      <th scope="col">Edit</th>
+      <th scope="col">Delete</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let client of clients">
+      <td class="text-center" style="width: 10%;">
+        <p>
+          {{ client.id }}
+        </p>
+      </td>
+      <td class="text-center" style="width: 20%;">
+        <h5>{{ client.clientCode }}</h5>
+      </td>
+      <td class="text-center" style="width: 20%;">
+        <h5>{{ client.name }}</h5>
+      </td>
+      <td class="text-center" style="width: 5%;">
+        <button (click)="editClient(client)" class="btn btn-warning">Edit</button>
+      </td>
+      <td class="text-center" style="width: 5%;">
+        <button (click)="deleteClient(client)" class="btn btn-danger">Delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div style="float:right;padding-right:10px">
+  <button (click)="previousPage()" class="btn btn-primary">Go Back</button>
+</div>
