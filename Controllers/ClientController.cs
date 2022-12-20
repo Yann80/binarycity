@@ -52,24 +52,39 @@ namespace BinaryCity.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (id != client.Id)
+            if (id != client.ClientId)
             {
                 return BadRequest();
             }
 
+            var objClient = _context.Clients.Include(c => c.Contacts).FirstOrDefault(t => t.ClientId == client.ClientId);
+            _context.Entry(objClient).CurrentValues.SetValues(client);
+            var contacts = objClient.Contacts.ToList();
+            // Adds new Users
             foreach (var contact in client.Contacts)
             {
-                _context.Entry(client).State = client.Id == 0 ? EntityState.Added : EntityState.Modified;
+                if (contacts.All(i => i.ContactId != contact.ContactId))
+                {
+                    objClient.Contacts.Add(contact);
+                }
             }
-
+            // Removes old Users
+            foreach (var contact in contacts)
+            {
+                if (client.Contacts.FirstOrDefault(c => c.ContactId == contact.ContactId) == null)
+                {
+                    var objContact = _context.Contacts.Include(c => c.Clients).First(co => co.ContactId == contact.ContactId);
+                    objClient.Contacts.Remove(objContact);
+                }
+            }
             try
             {
-                _repo.Update(client);
-                await _repo.SaveAsync(client);
+                _repo.Update(objClient);
+                await _repo.SaveAsync(objClient);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!_context.Clients.Any(e => e.Id == id))
+                if (!_context.Clients.Any(e => e.ClientId == id))
                 {
                     return NotFound();
                 }

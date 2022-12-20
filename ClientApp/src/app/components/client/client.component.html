@@ -10,7 +10,7 @@
   </div>
   <br />
   <div class="from-group">
-    <button type="submit" class="btn btn-primary" [disabled]="!clientForm.valid">Submit</button>
+    <button mat-raised-button color="primary" type="submit"  [disabled]="!clientForm.valid">Submit</button>
   </div>
 </form>
 <br />
@@ -27,7 +27,7 @@
     <tr *ngFor="let client of clients">
       <td class="text-center" style="width: 10%;">
         <p>
-          {{ client.id }}
+          {{ client.clientId }}
         </p>
       </td>
       <td class="text-center" style="width: 20%;">
@@ -53,5 +53,5 @@
 </table>
 <div *ngIf="noDataFound"ng- style="text-align:center">No data found!</div>
 <div style="float:right;padding-right:10px">
-  <button (click)="previousPage()" class="btn btn-primary">Go Back</button>
+  <button mat-raised-button (click)="previousPage()" color="primary">Go Back</button>
 </div>

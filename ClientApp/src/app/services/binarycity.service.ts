@@ -22,11 +22,11 @@ export class BinarycityService {
   }
 
   updateClient(client: Client): Observable<Client> {
-    return this.httpClient.put<Client>(this.baseUrl + 'client/updateclient/' + `${client.id}`, client);
+    return this.httpClient.put<Client>(this.baseUrl + 'client/updateclient/' + `${client.clientId}`, client);
   }
 
   deleteClient(client: Client): Observable<Client> {
-    return this.httpClient.delete<Client>(this.baseUrl + 'client/deleteclient/' + client.id);
+    return this.httpClient.delete<Client>(this.baseUrl + 'client/deleteclient/' + client.clientId);
   }
 
   getClients() {
@@ -42,10 +42,10 @@ export class BinarycityService {
   }
 
   updateContact(contact: Contact): Observable<Contact> {
-    return this.httpClient.put<Contact>(this.baseUrl + 'contact/updatecontact/' + `${contact.id}`, contact);
+    return this.httpClient.put<Contact>(this.baseUrl + 'contact/updatecontact/' + `${contact.contactId}`, contact);
   }
 
   deleteContact(contact: Contact): Observable<Contact> {
-    return this.httpClient.delete<Contact>(this.baseUrl + 'contact/deletecontact/' + contact.id);
+    return this.httpClient.delete<Contact>(this.baseUrl + 'contact/deletecontact/' + contact.contactId);
   }
 }

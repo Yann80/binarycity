@@ -37,10 +37,11 @@ export class ChoosecontactComponent implements OnInit {
 
   assignContactsToClient() {
     let filteredContacts = this.contacts.filter((contact) => contact.numberOfClients > 0);
-    let id = this.client.id;
-    this.selectedContacts = filteredContacts.filter(function (client) {
-      return client.id == id;
-    });
+    let id = this.client.clientId;
+    this.selectedContacts = filteredContacts.map(function (co) {
+      co.clients = co.clients.filter(cl => cl.clientId == id);
+      return co;
+    }).filter(({ clients }) => clients.length);
   }
 
   save() {
@@ -55,6 +56,6 @@ export class ChoosecontactComponent implements OnInit {
   }
 
   close() {
-    this.dialogRef.close();
+    this.dialogRef.close(this.client);
   }
 }

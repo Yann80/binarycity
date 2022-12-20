@@ -14,21 +14,21 @@ namespace BinaryCity.Migrations
                 name: "Clients",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    ClientId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ClientCodePrefix = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Clients", x => x.Id);
+                    table.PrimaryKey("PK_Clients", x => x.ClientId);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Contacts",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    ContactId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Surname = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -36,37 +36,37 @@ namespace BinaryCity.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Contacts", x => x.Id);
+                    table.PrimaryKey("PK_Contacts", x => x.ContactId);
                 });
 
             migrationBuilder.CreateTable(
                 name: "ClientContact",
                 columns: table => new
                 {
-                    ClientsId = table.Column<int>(type: "int", nullable: false),
-                    ContactsId = table.Column<int>(type: "int", nullable: false)
+                    ClientsClientId = table.Column<int>(type: "int", nullable: false),
+                    ContactsContactId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ClientContact", x => new { x.ClientsId, x.ContactsId });
+                    table.PrimaryKey("PK_ClientContact", x => new { x.ClientsClientId, x.ContactsContactId });
                     table.ForeignKey(
-                        name: "FK_ClientContact_Clients_ClientsId",
-                        column: x => x.ClientsId,
+                        name: "FK_ClientContact_Clients_ClientsClientId",
+                        column: x => x.ClientsClientId,
                         principalTable: "Clients",
-                        principalColumn: "Id",
+                        principalColumn: "ClientId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ClientContact_Contacts_ContactsId",
-                        column: x => x.ContactsId,
+                        name: "FK_ClientContact_Contacts_ContactsContactId",
+                        column: x => x.ContactsContactId,
                         principalTable: "Contacts",
-                        principalColumn: "Id",
+                        principalColumn: "ContactId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ClientContact_ContactsId",
+                name: "IX_ClientContact_ContactsContactId",
                 table: "ClientContact",
-                column: "ContactsId");
+                column: "ContactsContactId");
         }
 
         /// <inheritdoc />

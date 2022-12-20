@@ -31,7 +31,7 @@ namespace BinaryCity.Controllers
             _repo.Add(contact);
             await _repo.SaveAsync(contact);
 
-            return CreatedAtAction("GetContact", new { Id = contact.Id }, contact);
+            return CreatedAtAction("GetContact", new { Id = contact.ContactId }, contact);
         }
 
         [HttpGet]
@@ -51,24 +51,39 @@ namespace BinaryCity.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (id != contact.Id)
+            if (id != contact.ContactId)
             {
                 return BadRequest();
             }
 
+            var objContact = _context.Contacts.Include(c => c.Clients).FirstOrDefault(t => t.ContactId == contact.ContactId);
+            _context.Entry(objContact).CurrentValues.SetValues(contact);
+            var clients = objContact.Clients.ToList();
+            // Adds new Users
             foreach (var client in contact.Clients)
             {
-                _context.Entry(client).State = client.Id == 0 ? EntityState.Added : EntityState.Modified;
+                if (clients.All(i => i.ClientId != client.ClientId))
+                {
+                    objContact.Clients.Add(client);
+                }
             }
-
+            // Removes old Users
+            foreach (var client in clients)
+            {
+                if (contact.Clients.FirstOrDefault(c => c.ClientId == client.ClientId) == null)
+                {
+                    var objClient = _context.Clients.Include(c => c.Contacts).First(co => co.ClientId == client.ClientId);
+                    objContact.Clients.Remove(objClient);
+                }
+            }
             try
             {
-                _repo.Update(contact);
-                await _repo.SaveAsync(contact);
+                _repo.Update(objContact);
+                await _repo.SaveAsync(objContact);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!_context.Contacts.Any(e => e.Id == id))
+                if (!_context.Contacts.Any(e => e.ContactId == id))
                 {
                     return NotFound();
                 }

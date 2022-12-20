@@ -52,7 +52,7 @@ export class ContactComponent implements OnInit {
 
   onSubmit(form: FormGroup) {
     const objContact: Contact = {
-        id: 0,
+        contactId: 0,
         name: form.value.Name,
         surname: form.value.Surname,
         email: form.value.Email,
@@ -70,11 +70,11 @@ export class ContactComponent implements OnInit {
 
     }
     else {
-      objContact.id = this.selectedContact.id;
+      objContact.contactId = this.selectedContact.contactId;
       this.service.updateContact(objContact).subscribe({
         next: (data) => {
           const index = this.contacts.findIndex(
-            (contact) => contact.id === this.selectedContact?.id
+            (contact) => contact.contactId === this.selectedContact?.contactId
           );
           this.contacts[index].name = data.name
           this.contacts[index].surname = data.surname
@@ -98,7 +98,7 @@ export class ContactComponent implements OnInit {
         this.service.deleteContact(contact).subscribe({
           next: (data) => {
             const index = this.contacts.findIndex(
-              (contact) => contact.id === contact.id
+              (contact) => contact.contactId === contact.contactId
             );
             this.contacts.splice(index, 1);
             this.noDataFound = this.contacts.length == 0;
@@ -131,12 +131,13 @@ export class ContactComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(
       data => {
-        contact = data;
         const index = this.contacts.findIndex(
-          (contact) => contact.id === contact.id
+          (contact) => contact.contactId === data.contactId
         );
         //TODO: implement function of numberOfContacts
-        this.contacts[index].numberOfClients = contact.clients.length;
+        if (data.clients !== null && data.clients !== undefined) {
+          this.contacts[index].numberOfClients = data.clients.length;
+        }
       });
   }
 

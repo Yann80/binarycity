@@ -55,7 +55,7 @@ export class ClientComponent implements OnInit {
   onSubmit(form: FormGroup) {
     const objClient: Client = {
         name: form.value.Name,
-        id: 0,
+        clientId: 0,
         clientCodePrefix: '',
         clientCode: '',
         numberOfContacts: 0,
@@ -71,13 +71,13 @@ export class ClientComponent implements OnInit {
 
     }
     else {
-      objClient.id = this.selectedClient.id;
+      objClient.clientId = this.selectedClient.clientId;
       objClient.clientCodePrefix = this.selectedClient.clientCodePrefix;
       objClient.clientCode = this.selectedClient.clientCode;
       this.service.updateClient(objClient).subscribe({
         next: (data) => {
           const index = this.clients.findIndex(
-            (client) => client.id === this.selectedClient?.id
+            (client) => client.clientId === this.selectedClient?.clientId
           );
           this.clients[index].name = data.name;
           this.clients[index].clientCode = data.clientCode;
@@ -99,7 +99,7 @@ export class ClientComponent implements OnInit {
         this.service.deleteClient(client).subscribe({
           next: (data) => {
             const index = this.clients.findIndex(
-              (client) => client.id === client.id
+              (client) => client.clientId === client.clientId
             );
             this.clients.splice(index, 1);
             this.noDataFound = this.clients.length == 0;
@@ -130,12 +130,13 @@ export class ClientComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(
       data => {
-        client = data;
         const index = this.clients.findIndex(
-          (client) => client.id === client.id
+          (client) => client.clientId === data.clientId
         );
         //TODO: implement function of numberOfContacts
-        this.clients[index].numberOfContacts = client.contacts.length;
+        if (data.contacts !== null && data.contacts !== undefined) { 
+        this.clients[index].numberOfContacts = data.contacts.length;
+      }
       });
   }
 

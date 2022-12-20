@@ -24,7 +24,7 @@
   </div>
   <br />
   <div class="from-group">
-    <button type="submit" class="btn btn-primary" [disabled]="!contactForm.valid">Submit</button>
+    <button mat-raised-button type="submit" color="primary" [disabled]="!contactForm.valid">Submit</button>
   </div>
 </form>
 <br />
@@ -44,7 +44,7 @@
     <tr *ngFor="let contact of contacts">
       <td class="text-center" style="width: 10%;">
         <p>
-          {{ contact.id }}
+          {{ contact.contactId }}
         </p>
       </td>
       <td class="text-center" style="width: 20%;">
@@ -70,6 +70,6 @@
 </table>
 <div *ngIf="noDataFound" ng- style="text-align:center">No data found!</div>
 <div style="float:right;padding-right:10px">
-  <button (click)="previousPage()" class="btn btn-primary">Go Back</button>
+  <button mat-raised-button color="primary" (click)="previousPage()">Go Back</button>
 </div>
 

@@ -23,11 +23,11 @@ namespace BinaryCity.Migrations
 
             modelBuilder.Entity("BinaryCity.Models.Client", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ClientId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ClientId"));
 
                     b.Property<string>("ClientCodePrefix")
                         .IsRequired()
@@ -38,18 +38,18 @@ namespace BinaryCity.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("ClientId");
 
                     b.ToTable("Clients");
                 });
 
             modelBuilder.Entity("BinaryCity.Models.Contact", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ContactId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ContactId"));
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -63,22 +63,22 @@ namespace BinaryCity.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("ContactId");
 
                     b.ToTable("Contacts");
                 });
 
             modelBuilder.Entity("ClientContact", b =>
                 {
-                    b.Property<int>("ClientsId")
+                    b.Property<int>("ClientsClientId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ContactsId")
+                    b.Property<int>("ContactsContactId")
                         .HasColumnType("int");
 
-                    b.HasKey("ClientsId", "ContactsId");
+                    b.HasKey("ClientsClientId", "ContactsContactId");
 
-                    b.HasIndex("ContactsId");
+                    b.HasIndex("ContactsContactId");
 
                     b.ToTable("ClientContact");
                 });
@@ -87,13 +87,13 @@ namespace BinaryCity.Migrations
                 {
                     b.HasOne("BinaryCity.Models.Client", null)
                         .WithMany()
-                        .HasForeignKey("ClientsId")
+                        .HasForeignKey("ClientsClientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BinaryCity.Models.Contact", null)
                         .WithMany()
-                        .HasForeignKey("ContactsId")
+                        .HasForeignKey("ContactsContactId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

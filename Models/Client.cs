@@ -5,7 +5,7 @@ namespace BinaryCity.Models
     public class Client
     {
         [Key]
-        public int Id { get; set; }
+        public int ClientId { get; set; }
 
         [Required]
         [RegularExpression(@"^[a-zA-Z0-9][a-zA-Z0-9.,'\-_ ]*[a-zA-Z0-9]$",
@@ -15,7 +15,7 @@ namespace BinaryCity.Models
         [MaxLength(3)]
         public string ClientCodePrefix { get; set; }
 
-        public string ClientCode => String.Concat(ClientCodePrefix, String.Format("{0:000}", Id));
+        public string ClientCode => String.Concat(ClientCodePrefix, String.Format("{0:000}", ClientId));
 
         public int NumberOfContacts => Contacts.Count;
 

@@ -1,7 +1,7 @@
 import { Contact } from "./Contact.model";
 
 export class Client {
-  id:number;
+  clientId:number;
   name:string;
   clientCodePrefix: string;
   clientCode: string;

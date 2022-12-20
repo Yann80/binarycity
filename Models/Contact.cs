@@ -6,7 +6,7 @@ namespace BinaryCity.Models
     public class Contact
     {
         [Key]
-        public int Id { get; set; }
+        public int ContactId { get; set; }
 
         [Required]
         public string Name { get;set; }
