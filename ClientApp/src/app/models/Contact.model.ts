@@ -1,11 +1,11 @@
 import { Client } from "./Client.model";
 
-export class Contact {
+export interface Contact {
   id: number;
   name: string;
-  surName: string;
+  surname: string;
   email: string;
   fullName: string;
   numberOfClients: number;
-  clients: Client[] = [];
+  clients: Client[];
 }

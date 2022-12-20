@@ -1,0 +1,13 @@
+<h2 mat-dialog-title>Manage contacts for {{contactFullname}}</h2>
+<mat-dialog-content>
+  <mat-selection-list [(ngModel)]="selectedContacts" multiple [formControl]="listOfContacts">
+    <mat-list-option *ngFor="let contact of contacts" [value]="contact">
+      {{contact.fullName}}
+    </mat-list-option>
+  </mat-selection-list>
+</mat-dialog-content>
+<br />
+<mat-dialog-actions>
+  <button mat-raised-button color="primary" (click)="save()">Save</button>
+  <button mat-raised-button  (click)="close()">Close</button>
+</mat-dialog-actions>

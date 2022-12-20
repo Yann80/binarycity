@@ -1,4 +1,5 @@
 ﻿using BinaryCity.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace BinaryCity.Repository
 {
@@ -28,6 +29,7 @@ namespace BinaryCity.Repository
 
         public async Task<T> SaveAsync(T entity)
         {
+            bool hasChanges = _context.ChangeTracker.HasChanges();
             await _context.SaveChangesAsync();
             return entity;
         }

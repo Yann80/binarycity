@@ -39,7 +39,7 @@ namespace BinaryCity.Controllers
         [Route("GetClients")]
         public IActionResult GetClients()
         {
-            IEnumerable<Client> clients = _context.Clients.OrderBy(a => a.Name);
+            IEnumerable<Client> clients = _context.Clients.Include(c => c.Contacts).OrderBy(a => a.Name);
             return Ok(clients);
         }
 
@@ -57,7 +57,10 @@ namespace BinaryCity.Controllers
                 return BadRequest();
             }
 
-            _context.SetModified(client);
+            foreach (var contact in client.Contacts)
+            {
+                _context.Entry(client).State = client.Id == 0 ? EntityState.Added : EntityState.Modified;
+            }
 
             try
             {
@@ -76,7 +79,7 @@ namespace BinaryCity.Controllers
                 }
             }
 
-            return NoContent();
+            return Ok(client);
         }
 
         [HttpDelete]

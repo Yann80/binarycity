@@ -38,7 +38,7 @@ namespace BinaryCity.Controllers
         [Route("GetContacts")]
         public IActionResult GetContacts()
         {
-            IEnumerable<Contact> contacts = _context.Contacts.OrderBy(a => a.Name);
+            IEnumerable<Contact> contacts = _context.Contacts.Include(c => c.Clients).OrderBy(a => a.Name);
             return Ok(contacts);
         }
 
@@ -56,7 +56,10 @@ namespace BinaryCity.Controllers
                 return BadRequest();
             }
 
-            _context.SetModified(contact);
+            foreach (var client in contact.Clients)
+            {
+                _context.Entry(client).State = client.Id == 0 ? EntityState.Added : EntityState.Modified;
+            }
 
             try
             {
@@ -75,7 +78,7 @@ namespace BinaryCity.Controllers
                 }
             }
 
-            return NoContent();
+            return Ok(contact);
         }
 
         [HttpDelete]

@@ -21,6 +21,6 @@ namespace BinaryCity.Models
 
         public int NumberOfClients => Clients.Count;
 
-        public virtual ICollection<Client> Clients { get; set; }
+        public ICollection<Client> Clients { get; set; }
     }
 }

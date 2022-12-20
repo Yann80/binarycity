@@ -1,1 +1,75 @@
-<p>contact works!</p>
+<h2>Contacts</h2>
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="large" color="#fff" type="ball-spin-clockwise-fade-rotating" [fullScreen]="true"><p style="color: white"></p></ngx-spinner>
+<form [formGroup]="contactForm" (ngSubmit)="onSubmit(contactForm)">
+  <div class="form-group">
+    <label for="name" class="form-label">Name: </label>
+    <input type="text" formControlName="Name" class="form-control" required>
+    <div *ngIf="getControl.Name.touched && getControl.Name.invalid" class="danger">
+      <div *ngIf="getControl.Name.errors" class="text-danger">Please input a valid name</div>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="name" class="form-label">Surname: </label>
+    <input type="text" formControlName="Surname" class="form-control" required>
+    <div *ngIf="getControl.Surname.touched && getControl.Surname.invalid" class="danger">
+      <div *ngIf="getControl.Surname.errors" class="text-danger">Please input a valid surname</div>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="name" class="form-label">Email: </label>
+    <input type="text" formControlName="Email" class="form-control" required>
+    <div *ngIf="getControl.Email.touched && getControl.Email.invalid" class="danger">
+      <div *ngIf="getControl.Email.errors" class="text-danger">Please input a valid email</div>
+    </div>
+  </div>
+  <br />
+  <div class="from-group">
+    <button type="submit" class="btn btn-primary" [disabled]="!contactForm.valid">Submit</button>
+  </div>
+</form>
+<br />
+<table class="table" *ngIf="!noDataFound">
+  <thead class="thead-dark">
+    <tr class="text-center">
+      <th scope="col">#</th>
+      <th scope="col">Fullname</th>
+      <th scope="col">Email</th>
+      <th scope="col">Number Of Clients</th>
+      <th scope="col">Link</th>
+      <th scope="col">Edit</th>
+      <th scope="col">Delete</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let contact of contacts">
+      <td class="text-center" style="width: 10%;">
+        <p>
+          {{ contact.id }}
+        </p>
+      </td>
+      <td class="text-center" style="width: 20%;">
+        <h5>{{ contact.fullName }}</h5>
+      </td>
+      <td class="text-center" style="width: 20%;">
+        <h5>{{ contact.email }}</h5>
+      </td>
+      <td class="text-center" style="width: 20%;">
+        <h5>{{ contact.numberOfClients }}</h5>
+      </td>
+      <td class="text-center" style="width: 5%;">
+        <button mat-raised-button color="primary" (click)="linkToClient(contact)" class="btn btn-warning">Link</button>
+      </td>
+      <td class="text-center" style="width: 5%;">
+        <button mat-raised-button color="primary" (click)="editContact(contact)" class="btn btn-warning">Edit</button>
+      </td>
+      <td class="text-center" style="width: 5%;">
+        <button mat-raised-button color="warn" (click)="deleteContact(contact)" class="btn btn-danger">Delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div *ngIf="noDataFound" ng- style="text-align:center">No data found!</div>
+<div style="float:right;padding-right:10px">
+  <button (click)="previousPage()" class="btn btn-primary">Go Back</button>
+</div>
+

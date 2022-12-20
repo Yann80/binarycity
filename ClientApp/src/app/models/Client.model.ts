@@ -5,6 +5,6 @@ export class Client {
   name:string;
   clientCodePrefix: string;
   clientCode: string;
-  numberOfContacts:number;
   contacts: Contact[] = [];
+  numberOfContacts: number;
 }

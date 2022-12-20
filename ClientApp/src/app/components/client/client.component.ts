@@ -1,10 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
 import { Location } from '@angular/common'
 import { Router } from '@angular/router';
 import { Client } from '../../models/Client.model';
 import { BinarycityService } from '../../services/binarycity.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { Contact } from '../../models/Contact.model';
+import { ChoosecontactComponent } from './choosecontact/choosecontact.component';
+import { MessageboxComponent } from '../../shared/messagebox/messagebox.component';
 
 @Component({
   selector: 'app-client',
@@ -14,11 +18,13 @@ import { NgxSpinnerService } from 'ngx-spinner';
 export class ClientComponent implements OnInit {
 
   clients: Client[] = [];
+  contacts: Contact[] = [];
   clientForm: FormGroup;
   selectedClient?: Client;
   newClient: Client;
+  noDataFound: boolean; 
 
-  constructor(private service: BinarycityService, private formBuilder: FormBuilder, private router: Router, private location: Location, private spinner: NgxSpinnerService) { }
+  constructor(private service: BinarycityService, private formBuilder: FormBuilder, private router: Router, private location: Location, private spinner: NgxSpinnerService, private dialog: MatDialog) { }
 
   ngOnInit(): void {
 
@@ -34,6 +40,13 @@ export class ClientComponent implements OnInit {
       .subscribe(
         (result: any) => {
           this.clients = result;
+          this.noDataFound = this.clients.length == 0;
+        }
+      );
+    this.service.getContacts()
+      .subscribe(
+        (result: any) => {
+          this.contacts = result;
           this.spinner.hide();
         }
       );
@@ -52,39 +65,78 @@ export class ClientComponent implements OnInit {
     if (this.selectedClient == undefined) {
       this.service.addClient(objClient).subscribe(data => {
         this.clients.push(data);
+        this.noDataFound = false;
         this.clientForm.reset();
       });
 
     }
     else {
       objClient.id = this.selectedClient.id;
+      objClient.clientCodePrefix = this.selectedClient.clientCodePrefix;
+      objClient.clientCode = this.selectedClient.clientCode;
       this.service.updateClient(objClient).subscribe({
         next: (data) => {
           const index = this.clients.findIndex(
             (client) => client.id === this.selectedClient?.id
           );
-          this.clients[index].name = this.clientForm.get("Name")?.value;
+          this.clients[index].name = data.name;
+          this.clients[index].clientCode = data.clientCode;
+          this.clientForm.reset();
         }
       });
     }
   }
 
   deleteClient(client: Client) {
-    if (confirm("Confirmer suppression")) {
-      this.service.deleteClient(client).subscribe({
-        next: (data) => {
-          const index = this.clients.findIndex(
-            (client) => client.id === client.id
-          );
-          this.clients.splice(index, 1);
-        }
-      });
-    }
+    const confirmDialog = this.dialog.open(MessageboxComponent, {
+      data: {
+        title: 'Confirm deletion of client',
+        message: 'Are you sure, you want to delete client: ' + client.clientCode + ' ?'
+      }
+    });
+    confirmDialog.afterClosed().subscribe(result => {
+      if (result === true) {
+        this.service.deleteClient(client).subscribe({
+          next: (data) => {
+            const index = this.clients.findIndex(
+              (client) => client.id === client.id
+            );
+            this.clients.splice(index, 1);
+            this.noDataFound = this.clients.length == 0;
+          }
+        });
+      }
+    });
   }
 
   editClient(client: Client) {
     this.selectedClient = client;
-    this.clientForm.get("firstName")?.setValue(this.selectedClient.name);
+    this.clientForm.get("Name")?.setValue(this.selectedClient.name);
+  }
+
+  linkToContact(client: Client) {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+
+    const dialogRef = this.dialog.open(ChoosecontactComponent, {
+      minWidth: 500,
+      maxHeight: 600,
+      data: {
+        client: client
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(
+      data => {
+        client = data;
+        const index = this.clients.findIndex(
+          (client) => client.id === client.id
+        );
+        //TODO: implement function of numberOfContacts
+        this.clients[index].numberOfContacts = client.contacts.length;
+      });
   }
 
   get getControl() {

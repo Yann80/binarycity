@@ -19,11 +19,6 @@ namespace BinaryCity.Models
 
         public int NumberOfContacts => Contacts.Count;
 
-        public virtual ICollection<Contact> Contacts { get; set; }
-
-        Client()
-        {
-            Contacts = new List<Contact>();
-        }
+        public ICollection<Contact> Contacts { get; set; }
     }
 }
