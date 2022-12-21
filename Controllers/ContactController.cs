@@ -65,7 +65,7 @@ namespace BinaryCity.Controllers
             _context.Entry(objContact).CurrentValues.SetValues(contact);
             var clients = objContact.Clients.ToList();
 
-            // Adds new Users
+            // Adds new Contacts
             foreach (var client in contact.Clients)
             {
                 if (clients.All(i => i.ClientId != client.ClientId))
@@ -73,7 +73,7 @@ namespace BinaryCity.Controllers
                     objContact.Clients.Add(client);
                 }
             }
-            // Removes old Users
+            // Removes old Contacts
             foreach (var client in clients)
             {
                 if (contact.Clients.FirstOrDefault(c => c.ClientId == client.ClientId) == null)
