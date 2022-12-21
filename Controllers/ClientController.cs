@@ -57,6 +57,7 @@ namespace BinaryCity.Controllers
                 return BadRequest();
             }
 
+            client.ClientCodePrefix = GetClientAlphaCharacters(client.Name);
             var objClient = _context.Clients.Include(c => c.Contacts).FirstOrDefault(t => t.ClientId == client.ClientId);
 
             if (objClient == null)
