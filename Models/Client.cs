@@ -17,7 +17,7 @@ namespace BinaryCity.Models
 
         public string ClientCode => String.Concat(ClientCodePrefix, String.Format("{0:000}", ClientId));
 
-        public int NumberOfContacts => Contacts.Count;
+        public int NumberOfContacts => Contacts != null ? Contacts.Count : 0;
 
         public ICollection<Contact> Contacts { get; set; }
     }

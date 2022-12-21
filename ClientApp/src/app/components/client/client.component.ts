@@ -81,6 +81,7 @@ export class ClientComponent implements OnInit {
           );
           this.clients[index].name = data.name;
           this.clients[index].clientCode = data.clientCode;
+          this.selectedClient = undefined;
           this.clientForm.reset();
         }
       });

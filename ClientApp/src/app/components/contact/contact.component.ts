@@ -80,6 +80,7 @@ export class ContactComponent implements OnInit {
           this.contacts[index].surname = data.surname
           this.contacts[index].fullName = data.fullName;
           this.contacts[index].email = data.email;
+          this.selectedContact = undefined;
           this.contactForm.reset();
         }
       });

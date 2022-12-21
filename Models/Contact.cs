@@ -19,7 +19,7 @@ namespace BinaryCity.Models
 
         public  string FullName => string.Concat(this.Surname, " ", this.Name);
 
-        public int NumberOfClients => Clients.Count;
+        public int NumberOfClients => Clients != null ? Clients.Count : 0;
 
         public ICollection<Client> Clients { get; set; }
     }

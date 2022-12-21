@@ -58,8 +58,14 @@ namespace BinaryCity.Controllers
             }
 
             var objClient = _context.Clients.Include(c => c.Contacts).FirstOrDefault(t => t.ClientId == client.ClientId);
+
+            if (objClient == null)
+                return NotFound();
+
+            _repo.Attach(objClient);
             _context.Entry(objClient).CurrentValues.SetValues(client);
             var contacts = objClient.Contacts.ToList();
+
             // Adds new Users
             foreach (var contact in client.Contacts)
             {
@@ -79,7 +85,7 @@ namespace BinaryCity.Controllers
             }
             try
             {
-                _repo.Update(objClient);
+                _context.SetModified(objClient);
                 await _repo.SaveAsync(objClient);
             }
             catch (DbUpdateConcurrencyException)

@@ -12,6 +12,11 @@ namespace BinaryCity.Repository
             _context = context;
         }
 
+        public void Attach(T entity)
+        {
+            _context.Set<T>().Attach(entity);
+        }
+
         public void Add(T entity)
         {
             _context.Set<T>().Add(entity);
@@ -29,7 +34,6 @@ namespace BinaryCity.Repository
 
         public async Task<T> SaveAsync(T entity)
         {
-            bool hasChanges = _context.ChangeTracker.HasChanges();
             await _context.SaveChangesAsync();
             return entity;
         }
