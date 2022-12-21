@@ -38,7 +38,7 @@ namespace BinaryCity.Controllers
         [Route("GetContacts")]
         public IActionResult GetContacts()
         {
-            IEnumerable<Contact> contacts = _context.Contacts.Include(c => c.Clients).OrderBy(a => a.Name);
+            var contacts = _repo.GetEntity().Include(c => c.Clients).OrderBy(a => a.Name);
             return Ok(contacts);
         }
 
@@ -56,12 +56,11 @@ namespace BinaryCity.Controllers
                 return BadRequest();
             }
 
-            var objContact = _context.Contacts.Include(c => c.Clients).FirstOrDefault(t => t.ContactId == contact.ContactId);
+            var objContact = _repo.GetEntity().Include(cl => cl.Clients).FirstOrDefault(c => c.ContactId == contact.ContactId);
 
             if (objContact == null)
                 return NotFound();
 
-            _repo.Attach(objContact);
             _context.Entry(objContact).CurrentValues.SetValues(contact);
             var clients = objContact.Clients.ToList();
 
@@ -78,13 +77,12 @@ namespace BinaryCity.Controllers
             {
                 if (contact.Clients.FirstOrDefault(c => c.ClientId == client.ClientId) == null)
                 {
-                    var objClient = _context.Clients.Include(c => c.Contacts).First(co => co.ClientId == client.ClientId);
-                    objContact.Clients.Remove(objClient);
+                    objContact.Clients.Remove(client);
                 }
             }
             try
             {
-                _context.SetModified(objContact);
+                _repo.Update(objContact);
                 await _repo.SaveAsync(objContact);
             }
             catch (DbUpdateConcurrencyException)

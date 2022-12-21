@@ -39,7 +39,7 @@ namespace BinaryCity.Controllers
         [Route("GetClients")]
         public IActionResult GetClients()
         {
-            IEnumerable<Client> clients = _context.Clients.Include(c => c.Contacts).OrderBy(a => a.Name);
+            var clients = _repo.GetEntity().Include(c => c.Contacts).OrderBy(a => a.Name);
             return Ok(clients);
         }
 
@@ -58,12 +58,11 @@ namespace BinaryCity.Controllers
             }
 
             client.ClientCodePrefix = GetClientAlphaCharacters(client.Name);
-            var objClient = _context.Clients.Include(c => c.Contacts).FirstOrDefault(t => t.ClientId == client.ClientId);
+            var objClient = _repo.GetEntity().Include(c => c.Contacts).FirstOrDefault(cl => cl.ClientId == client.ClientId);
 
             if (objClient == null)
                 return NotFound();
 
-            _repo.Attach(objClient);
             _context.Entry(objClient).CurrentValues.SetValues(client);
             var contacts = objClient.Contacts.ToList();
 
@@ -80,13 +79,12 @@ namespace BinaryCity.Controllers
             {
                 if (client.Contacts.FirstOrDefault(c => c.ContactId == contact.ContactId) == null)
                 {
-                    var objContact = _context.Contacts.Include(c => c.Clients).First(co => co.ContactId == contact.ContactId);
-                    objClient.Contacts.Remove(objContact);
+                    objClient.Contacts.Remove(contact);
                 }
             }
             try
             {
-                _context.SetModified(objClient);
+                _repo.Update(objClient);
                 await _repo.SaveAsync(objClient);
             }
             catch (DbUpdateConcurrencyException)

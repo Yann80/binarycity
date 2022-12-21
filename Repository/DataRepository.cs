@@ -1,5 +1,6 @@
 ﻿using BinaryCity.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace BinaryCity.Repository
 {
@@ -10,11 +11,6 @@ namespace BinaryCity.Repository
         public DataRepository(DataContext context)
         {
             _context = context;
-        }
-
-        public void Attach(T entity)
-        {
-            _context.Set<T>().Attach(entity);
         }
 
         public void Add(T entity)
@@ -30,6 +26,11 @@ namespace BinaryCity.Repository
         public void Delete(T entity)
         {
             _context.Set<T>().Remove(entity);
+        }
+
+        public DbSet<T> GetEntity()
+        {
+            return _context.Set<T>();
         }
 
         public async Task<T> SaveAsync(T entity)
