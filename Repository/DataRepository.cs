@@ -28,7 +28,7 @@ namespace BinaryCity.Repository
             _context.Set<T>().Remove(entity);
         }
 
-        public DbSet<T> GetEntity()
+        public DbSet<T> GetEntities()
         {
             return _context.Set<T>();
         }

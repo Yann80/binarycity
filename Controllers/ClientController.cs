@@ -39,7 +39,7 @@ namespace BinaryCity.Controllers
         [Route("GetClients")]
         public IActionResult GetClients()
         {
-            var clients = _repo.GetEntity().Include(c => c.Contacts).OrderBy(a => a.Name);
+            var clients = _repo.GetEntities().Include(c => c.Contacts).OrderBy(a => a.Name);
             return Ok(clients);
         }
 
@@ -58,7 +58,7 @@ namespace BinaryCity.Controllers
             }
 
             client.ClientCodePrefix = GetClientAlphaCharacters(client.Name);
-            var objClient = _repo.GetEntity().Include(c => c.Contacts).FirstOrDefault(cl => cl.ClientId == client.ClientId);
+            var objClient = _repo.GetEntities().Include(c => c.Contacts).SingleOrDefault(cl => cl.ClientId == client.ClientId);
 
             if (objClient == null)
                 return NotFound();

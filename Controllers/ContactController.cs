@@ -38,7 +38,7 @@ namespace BinaryCity.Controllers
         [Route("GetContacts")]
         public IActionResult GetContacts()
         {
-            var contacts = _repo.GetEntity().Include(c => c.Clients).OrderBy(a => a.Name);
+            var contacts = _repo.GetEntities().Include(c => c.Clients).OrderBy(a => a.Name);
             return Ok(contacts);
         }
 
@@ -56,7 +56,7 @@ namespace BinaryCity.Controllers
                 return BadRequest();
             }
 
-            var objContact = _repo.GetEntity().Include(cl => cl.Clients).FirstOrDefault(c => c.ContactId == contact.ContactId);
+            var objContact = _repo.GetEntities().Include(cl => cl.Clients).SingleOrDefault(c => c.ContactId == contact.ContactId);
 
             if (objContact == null)
                 return NotFound();
